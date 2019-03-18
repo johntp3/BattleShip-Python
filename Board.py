@@ -6,7 +6,7 @@ class Board:
     def __init__(self, rows, cols):
         self.rows = rows
         self.cols = cols
-        self.board = [[0] * self.cols for _ in range(rows)]
+        self.board = [[0] * self.cols for _ in range(self.rows)]
 
     def __eq__(self, other):
         if (self.rows != other.rows) or (self.cols != other.cols):
@@ -15,6 +15,13 @@ class Board:
         for row in range(self.rows):
             for col in range(self.cols):
                 if self.board[row][col] != other.board[row][col]:
+                    return False
+        return True
+
+    def __contains__(self, item):
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if item.board[row][col] == 1 and self.board[row][col] != 1:
                     return False
         return True
 
@@ -29,6 +36,8 @@ class Board:
             for col in range(self.cols):
                 if self.board[row][col] == 1:
                     board_string += " X"
+                elif self.board[row][col] == 2:
+                    board_string += " !"
                 else:
                     board_string += " O"
         return board_string + "\n"
@@ -47,6 +56,8 @@ class Board:
             for col in range(self.cols):
                 if self.board[row][col] == 1:
                     board_string += " X"
+                elif self.board[row][col] == 2:
+                    board_string += " !"
                 else:
                     board_string += " O"
 
@@ -54,6 +65,8 @@ class Board:
             for col in range(other.cols):
                 if other.board[row][col] == 1:
                     board_string += " X"
+                elif other.board[row][col] == 2:
+                    board_string += " !"
                 else:
                     board_string += " O"
         return board_string + "\n"
@@ -85,3 +98,6 @@ class Board:
         else:
             for x in range(ship_length):
                 self.board[start_row - 1][x + start_col - 1] = value
+
+    def edit_element(self, row, col, value):
+        self.board[row - 1][col - 1] = value
