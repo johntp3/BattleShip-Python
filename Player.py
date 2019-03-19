@@ -1,5 +1,7 @@
 from Board import *
 
+ship_names = ("destroyer", "submarine", "cruiser", "battleship", "carrier")
+
 
 class Player:
     def __init__(self, rows, cols):
@@ -13,28 +15,23 @@ class Player:
         self.cruiser = Board(self.rows, self.cols)
         self.battleship = Board(self.rows, self.cols)
         self.carrier = Board(self.rows, self.cols)
+        self.ships = [self.destroyer, self.submarine, self.cruiser, self.battleship, self.carrier]
+        self.placed_float = [False, False, False, False, False, True]  # last element used to bypass first check
 
     def set_guess(self, row, col):
         self.guess = Board(self.rows, self.cols)
         self.guess.edit_element(row, col, 1)
 
+    def finish(self):
+        b_initial = self.placed_float[0]
+        for b in self.placed_float:
+            if b_initial is not b:
+                return False
+        return True
 
-''' Proof of concept
-player1 = Player(3, 4)
-player1.check.edit_element(1, 1, 1)
-player1.check.edit_element(1, 2, 1)
-player1.check.edit_element(1, 3, 1)
-
-while player1.check not in player1.play:
-    print(player1.play + player1.check)
-    guess_string = input("Enter row and column of your guess Player 2 (<row> <col>): ")
-    guess_row = int(guess_string[0])
-    guess_col = int(guess_string[len(guess_string)-1])
-    player1.set_guess(guess_row, guess_col)
-    if player1.guess in player1.check:
-        print("Hit!")
-        player1.play.edit_element(guess_row, guess_col, 1)
-    else:
-        print("Miss!")
-        player1.play.edit_element(guess_row, guess_col, 2)
-'''
+    def edit_ship(self, ship_name, orientation, start_row, start_col):
+        for x in range(len(ship_names)):
+            if ship_name == ship_names[x]:
+                self.ships[x].edit_board(ship_name, orientation, start_row, start_col, 1)
+                self.placed_float[x] = True
+                break

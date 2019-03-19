@@ -1,5 +1,4 @@
-ship_data = {"destroyer": 2, "submarine": 3, "cruiser": 3, "battleship": 4, "carrier": 5}
-row_value = {"A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9, "J": 10}
+ship_length = {"destroyer": 2, "submarine": 3, "cruiser": 3, "battleship": 4, "carrier": 5}
 
 
 class Board:
@@ -18,10 +17,10 @@ class Board:
                     return False
         return True
 
-    def __contains__(self, item):
+    def contains(self, other):
         for row in range(self.rows):
             for col in range(self.cols):
-                if item.board[row][col] == 1 and self.board[row][col] != 1:
+                if other.board[row][col] == 1 and self.board[row][col] != 1:
                     return False
         return True
 
@@ -72,9 +71,9 @@ class Board:
         return board_string + "\n"
 
     def can_edit_board(self, ship_name, orientation, start_row, start_col):
-        ship_length = 0
+        length_of_ship = 0
         try:
-            ship_length = ship_data[ship_name]
+            length_of_ship = ship_length[ship_name]
         except KeyError:
             return False
 
@@ -82,21 +81,21 @@ class Board:
             return False
 
         if orientation == "v":
-            if (start_row + ship_length > self.rows + 1) or (start_col > self.cols):
+            if (start_row + length_of_ship > self.rows + 1) or (start_col > self.cols):
                 return False
         else:
-            if (start_row > self.rows) or (start_col + ship_length > self.cols + 1):
+            if (start_row > self.rows) or (start_col + length_of_ship > self.cols + 1):
                 return False
         return True
 
     def edit_board(self, ship_name, orientation, start_row, start_col, value):
-        ship_length = ship_data[ship_name]
+        length_of_ship = ship_length[ship_name]
 
-        if orientation == "v":
-            for x in range(ship_length):
+        if orientation.lower() == "v":
+            for x in range(length_of_ship):
                 self.board[x + start_row - 1][start_col - 1] = value
         else:
-            for x in range(ship_length):
+            for x in range(length_of_ship):
                 self.board[start_row - 1][x + start_col - 1] = value
 
     def edit_element(self, row, col, value):
