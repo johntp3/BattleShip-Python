@@ -29,9 +29,45 @@ class Player:
                 return False
         return True
 
-    def edit_ship(self, ship_name, orientation, start_row, start_col):
-        for x in range(len(ship_names)):
-            if ship_name == ship_names[x]:
-                self.ships[x].edit_board(ship_name, orientation, start_row, start_col, 1)
-                self.placed_float[x] = True
-                break
+    def can_edit_check_board(self, ship_name, orientation, start_row, start_col):
+        length_of_ship = 0
+        try:
+            length_of_ship = ship_length[ship_name]
+        except KeyError:
+            return False
+
+        if orientation != "v" and orientation != "h":
+            return False
+
+        if orientation == "v":
+            if (start_row + length_of_ship > self.rows + 1) or (start_col > self.cols):
+                return False
+            else:
+                for x in range(length_of_ship):
+                    if self.check.get_item(x + start_row, start_col) == 1:
+                        return False
+        else:
+            if (start_row > self.rows) or (start_col + length_of_ship > self.cols + 1):
+                return False
+            else:
+                for x in range(length_of_ship):
+                    if self.check.get_item(start_row, x + start_col) == 1:
+                        return False
+        return True
+
+    def edit_ship(self, ship_name, orientation, start_row, start_col, value):
+        if value == 1:
+            for x in range(len(ship_names)):
+                if ship_name == ship_names[x]:
+                    self.ships[x].edit_board(ship_name, orientation, start_row, start_col, value)
+                    self.placed_float[x] = True
+                    break
+        else:
+            for x in range(len(ship_names)):
+                if ship_name == ship_names[x]:
+                    for row in range(1, self.rows+1):
+                        for col in range(1, self.cols+1):
+                            if self.ships[x].get_item(row, col) == 1:
+                                self.check.edit_element(row, col, 0)
+                                self.ships[x].edit_element(row, col, 0)
+                    self.placed_float[x] = False

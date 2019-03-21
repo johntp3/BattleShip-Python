@@ -70,28 +70,13 @@ class Board:
                     board_string += " O"
         return board_string + "\n"
 
-    def can_edit_board(self, ship_name, orientation, start_row, start_col):
-        length_of_ship = 0
-        try:
-            length_of_ship = ship_length[ship_name]
-        except KeyError:
-            return False
-
-        if orientation != "v" and orientation != "h":
-            return False
-
-        if orientation == "v":
-            if (start_row + length_of_ship > self.rows + 1) or (start_col > self.cols):
-                return False
-        else:
-            if (start_row > self.rows) or (start_col + length_of_ship > self.cols + 1):
-                return False
-        return True
+    def get_item(self, row, col):
+        return self.board[row - 1][col - 1]
 
     def edit_board(self, ship_name, orientation, start_row, start_col, value):
         length_of_ship = ship_length[ship_name]
 
-        if orientation.lower() == "v":
+        if orientation == "v":
             for x in range(length_of_ship):
                 self.board[x + start_row - 1][start_col - 1] = value
         else:
